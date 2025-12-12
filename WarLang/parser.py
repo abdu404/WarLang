@@ -1,7 +1,7 @@
 from scanner import tokenize
 import sys
 
-# ========= AST / PARSE TREE NODE===========
+# =========PARSE TREE NODE===========
 class ParseNode:
     def __init__(self, name, children=None, value=None):
         self.name = name
@@ -13,14 +13,14 @@ class ParseNode:
         return f"Node({self.name})"
 
 
-# ===============PARSER====================
+# ===============PARSER==================
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
         self.position = 0
         self.errors = []
 
-    # --- Helper Functions ---
+    # --- Helper functions for get the current token and move on to next and match if the expected found ---
     def current_token(self):
         if self.position < len(self.tokens):
             return self.tokens[self.position]
@@ -43,8 +43,7 @@ class Parser:
         token = self.current_token()
         err_msg = f"[Syntax Error] {message} at line {token.line}"
         self.errors.append(err_msg)
-        # print(err_msg) # Optional: comment out if you handle printing in main
-
+        
     # --- Node Helper ---
     def make_node(self, name, children=None, value=None, token=None):
         node = ParseNode(name, children, value)
@@ -56,10 +55,8 @@ class Parser:
              node.line = self.tokens[self.position-1].line
         return node
 
-    # ==========================================
-    #             GRAMMAR IMPLEMENTATION
-    # ==========================================
-
+    
+    #===========GRAMMAR IMPLEMENTATION==========
     def parse(self):
         root = self.make_node("Program")
         
@@ -67,7 +64,7 @@ class Parser:
         imports = self.parse_import_list()
         if imports: root.children.append(imports)
 
-        # 2. Global Declarations (CRITICAL: Added this back)
+        # 2. Global Declarations 
         globals_node = self.parse_global_decls()
         if globals_node: root.children.append(globals_node)
 
@@ -79,7 +76,7 @@ class Parser:
 
     def parse_import_list(self):
         children = []
-        # Checks for INCLUDE_IMPORT (Matches the fix in Scanner)
+        # Checks for INCLUDE_IMPORT 
         while self.current_token().type == 'INCLUDE_IMPORT':
             children.append(self.parse_include_stmt())
         if not children: return None
@@ -253,7 +250,6 @@ class Parser:
     def parse_include_stmt(self):
         children = []
         self.match('INCLUDE_IMPORT')
-        # Matches IDENTIFIER now (for #call lib)
         id_tok = self.match('IDENTIFIER')
         if id_tok:
              children.append(self.make_node("ImportName", value=id_tok.value))
