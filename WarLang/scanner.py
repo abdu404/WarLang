@@ -25,31 +25,33 @@ KEYWORDS = {
 
 # === TOKEN REGEX DEFINITIONS ===
 PATTERNS = {
-    'INCREMENT':    r'\+\+',        
-    'DECREMENT':    r'--',          
-    'NUMBER':       r'\d+(\.\d+)?',
-    'STRING':       r'"[^"\n]*"?',
-    'IDENTIFIER':   r'[A-Za-z_]\w*',
-    'EQ':           r'==',
-    'NOT_EQ':       r'!=',
-    'LE':           r'<=',
-    'GE':           r'>=',
-    'ASSIGN':       r'=',
-    'LESS_THAN':    r'<',
-    'GREAT_THAN':   r'>',
-    'PLUS':         r'\+',
-    'MINUS':        r'-',
-    'MUL':          r'\*',
-    'DIV':          r'/',
-    'LPAREN':       r'\(',
-    'RPAREN':       r'\)',
-    'LBRACE':       r'\{',
-    'RBRACE':       r'\}',
-    'SEMICOLON':    r';',
-    'COMMENT':      r'\#.*',        
-    'NEWLINE':      r'\n',
-    'SKIP':         r'[ \t]+',
-    'MISMATCH':     r'.'
+    'COMMENT':       r'~.*',
+    'INCLUDE_IMPORT':r'\#call',
+    'INCREMENT':     r'\+\+',        
+    'DECREMENT':     r'--',          
+    'NUMBER':        r'\d+(\.\d+)?',
+    'STRING':        r'"[^"\n]*"?',
+    'IDENTIFIER':    r'[A-Za-z_]\w*',
+    'EQ':            r'==',
+    'NOT_EQ':        r'!=',
+    'LE':            r'<=',
+    'GE':            r'>=',
+    'ASSIGN':        r'=',
+    'LESS_THAN':     r'<',
+    'GREAT_THAN':    r'>',
+    'PLUS':          r'\+',
+    'MINUS':         r'-',
+    'MUL':           r'\*',
+    'DIV':           r'/',
+    'LPAREN':        r'\(',
+    'RPAREN':        r'\)',
+    'LBRACE':        r'\{',
+    'RBRACE':        r'\}',
+    'SEMICOLON':     r';',
+    'COMMA':         r',',        
+    'NEWLINE':       r'\n',
+    'SKIP':          r'[ \t]+',
+    'MISMATCH':      r'.'
 }
 
 def tokenize(code):
@@ -78,7 +80,7 @@ def tokenize(code):
                     position = match.end()
                     break
 
-                # === Skip whitespace/comments ===
+                # === whitespace/comments ===
                 elif name in ('SKIP', 'COMMENT'):
                     position = match.end()
                     break
@@ -114,13 +116,6 @@ def tokenize(code):
                     position = match.end()
                     break
 
-                # === INVALID '//' SEQUENCE ===
-                elif name == 'DIV' and code[position:position+2] == '//':
-                    print(f"[Lexical Error] Unexpected symbol '//' at line {line_num}, column {column}")
-                    error_count += 1
-                    position += 2
-                    break
-
                 # === INVALID CHARACTERS ===
                 elif name == 'MISMATCH':
                     print(f"[Lexical Error] Unexpected symbol '{value}' at line {line_num}, column {column}")
@@ -128,7 +123,7 @@ def tokenize(code):
                     position = match.end()
                     break
 
-                # === NORMAL TOKENS ===
+                # === TOKENS ===
                 else:
                     tokens.append(Token(name, value, line_num, column))
                     position = match.end()
