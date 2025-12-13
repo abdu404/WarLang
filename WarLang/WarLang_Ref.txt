@@ -1,0 +1,151 @@
+================================================================================
+                       WARLANG LANGUAGE REFERENCE MANUAL
+================================================================================
+
+1. LEXICAL STRUCTURE
+--------------------------------------------------------------------------------
+
+1.1 KEYWORDS
+The following identifiers are reserved and cannot be used as variable names:
+
+KEYWORD      DESCRIPTION                  EQUIVALENT (C/Python)
+-------      -----------                  ---------------------
+battle       Main program entry point     main()
+soldier      Integer data type            int
+force        Floating-point data type     float
+intel        String data type             string / str
+flag         Boolean data type            bool
+shield       Conditional statement        if
+retreat      Alternative conditional      else
+march        Loop (condition)             while
+deploy       Loop (iteration)             for
+shout        Standard output              print
+scout        Standard input               input
+#call        Import directive             import
+
+1.2 LITERALS
+  - Booleans:  Ally (True), Enemy (False)
+  - Strings:   Enclosed in double quotes (e.g., "Target Acquired")
+  - Comments:  Single-line comments begin with '~'
+
+
+2. TYPE SYSTEM
+--------------------------------------------------------------------------------
+WarLang is statically typed. Variables must be declared with a type.
+
+2.1 PRIMITIVE TYPES
+  TYPE       SIZE/FORMAT             EXAMPLE
+  ----       -----------             -------
+  soldier    Signed Integer          100
+  force      Double-precision Float  9.81
+  intel      ASCII String            "Sector 7"
+  flag       Boolean                 Ally
+
+2.2 COMPATIBILITY RULES
+  - Implicit Promotion: 'soldier' can be used where 'force' is expected.
+  - Narrowing: Assigning 'force' to 'soldier' is ILLEGAL.
+  - String Math: Adding 'intel' to numbers is ILLEGAL.
+
+
+3. STATEMENTS
+--------------------------------------------------------------------------------
+
+3.1 VARIABLE DECLARATION
+  Syntax: Type Identifier [= Expression];
+
+  Examples:
+      soldier ammo = 30;
+      force velocity;       ~ Uninitialized
+      intel status = "Go";
+
+3.2 ASSIGNMENT
+  Syntax: Identifier = Expression;
+
+  Examples:
+      velocity = 12.5;
+      ammo = ammo - 1;
+
+3.3 BLOCK SCOPING
+  Statements are grouped using curly braces { ... }. 
+  Variables declared inside a block are local to that scope.
+
+
+4. CONTROL FLOW
+--------------------------------------------------------------------------------
+
+4.1 CONDITIONAL (shield / retreat)
+  Executes code if the condition is Ally (True).
+
+  Syntax:
+      shield ( condition ) {
+          ...
+      } retreat {
+          ...
+      }
+
+4.2 ITERATION (march)
+  Executes while the condition remains Ally.
+
+  Syntax:
+      march ( condition ) {
+          ...
+      }
+
+4.3 ITERATION (deploy)
+  Standard iteration loop.
+
+  Syntax:
+      deploy ( init; condition; update Or Assign ) {
+          ...
+      }
+
+  Example:
+      deploy (soldier i = 0; i < 10; i++) {
+          shout(i);
+      }
+
+
+5. STANDARD LIBRARY
+--------------------------------------------------------------------------------
+
+5.1 INPUT / OUTPUT
+
+  shout(arg1, arg2, ...)
+      Prints arguments to the console.
+      Returns: Void
+
+  scout(variable)
+      Reads input from the user and assigns it to 'variable'.
+      Returns: Void
+
+
+6. OPERATORS
+--------------------------------------------------------------------------------
+Listed by precedence (High to Low):
+
+  OPERATOR    DESCRIPTION          ASSOCIATIVITY
+  --------    -----------          -------------
+  ++ --       Increment/Decrement  Right-to-Left
+  * /        Multiplicative       Left-to-Right
+  +  -        Additive             Left-to-Right
+  < > <= >=   Relational           Left-to-Right
+  == !=       Equality             Left-to-Right
+  =           Assignment           Right-to-Left
+
+
+7. PROGRAM STRUCTURE
+--------------------------------------------------------------------------------
+A valid program consists of optional imports, global vars, and the battle function.
+
+Example:
+
+    #call "math"            ~ Imports
+
+    soldier GLOBAL_VAL = 0; ~ Global Variables
+
+    battle() {              ~ Entry Point
+        ~ Local Code
+    }
+
+================================================================================
+WarLang Project - 2025
